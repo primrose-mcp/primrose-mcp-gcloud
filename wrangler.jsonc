@@ -1,0 +1,71 @@
+{
+  // ==========================================================================
+  // Google Cloud Platform MCP Server - Wrangler Configuration
+  // ==========================================================================
+  //
+  // MULTI-TENANT ARCHITECTURE:
+  // This server supports multiple tenants. Credentials are passed via request
+  // headers, NOT stored as wrangler secrets. This allows a single deployment
+  // to serve multiple customers.
+  //
+  // Required Headers:
+  // - X-GCloud-Access-Token: OAuth 2.0 access token for GCP authentication
+  //
+  // Optional Headers:
+  // - X-GCloud-Project-ID: Default project ID for API calls
+  // ==========================================================================
+
+  "name": "primrose-mcp-gcloud",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-12-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // ==========================================================================
+  // Environment Variables (server-wide configuration, not per-tenant)
+  // ==========================================================================
+  "vars": {
+    "CHARACTER_LIMIT": "50000",
+    "DEFAULT_PAGE_SIZE": "20",
+    "MAX_PAGE_SIZE": "100"
+  },
+
+  // ==========================================================================
+  // Multi-Tenant Authentication (via Request Headers)
+  // ==========================================================================
+  //
+  // Tenant credentials are passed via HTTP headers on each request:
+  //
+  // Required:
+  //   X-GCloud-Access-Token: OAuth 2.0 access token (Bearer token)
+  //
+  // Optional:
+  //   X-GCloud-Project-ID: Default project ID for API calls
+  //
+  // Authentication:
+  // Use a service account or user OAuth token with appropriate GCP permissions.
+  // Generate tokens using: gcloud auth print-access-token
+
+  // ==========================================================================
+  // KV Namespace (uncomment for OAuth token storage)
+  // ==========================================================================
+  // Create: npx wrangler kv namespace create "OAUTH_KV"
+  //
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "OAUTH_KV",
+  //     "id": "<YOUR_KV_NAMESPACE_ID>"
+  //   }
+  // ],
+
+  // ==========================================================================
+  // Development
+  // ==========================================================================
+  "dev": {
+    "port": 8787,
+    "local_protocol": "http"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}
